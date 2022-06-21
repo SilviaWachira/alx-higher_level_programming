@@ -1,11 +1,23 @@
 #!/usr/bin/python3
-def safe_print_list_integers(my_list=[], x=0):
-    c = 0
-    for i in range(x):
-        try:
-            print("{:d}".format(my_list[i]), end="")
-            c += 1
-        except (ValueError, TypeError):
-            continue
-    print()
-    return 
+"""defines a class Square"""
+
+
+class Square:
+    """Represents a square
+    Attributes:
+        __size (int): size of a side of the square
+    """
+    def __init__(self, size=0):
+        """initializes the square
+        Args:
+            size (int): size of a side of the square
+        Returns:
+            None
+        """
+        if type(size) is not int:
+            raise TypeError("size must be an integer")
+        else:
+            if size < 0:
+                raise ValueError("size must be >= 0")
+            else:
+                self.__size = size 
