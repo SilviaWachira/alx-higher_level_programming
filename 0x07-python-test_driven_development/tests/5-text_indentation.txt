@@ -1,4 +1,3 @@
-
 # doctest_5-text_indentation.py
 ===============================
 Tests to 5-text_indentation.py
