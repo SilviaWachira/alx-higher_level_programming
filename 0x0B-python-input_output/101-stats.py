@@ -1,38 +1,43 @@
 #!/usr/bin/python3
-'''
-Script for log parsing
-'''
+"""
+Module for log parsing scripts.
+"""
+
+
 import sys
 
 
 if __name__ == "__main__":
-    a = []
-    codes = ["200", "301", "400", "401", "403", "404", "405", "500"]
-    dictio = {"200": 0, "301": 0, "400": 0, "401": 0, "403": 0, "404": 0,
-              "405": 0, "500": 0}
-    i = 0
-    file_size = 0
+    size = [0]
+    codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+
+    def check_match(line):
+        '''Checks for regexp match in line.'''
+        try:
+            line = line[:-1]
+            words = line.split(" ")
+            size[0] += int(words[-1])
+            code = int(words[-2])
+            if code in codes:
+                codes[code] += 1
+        except Exception as e:
+            pass
+
+    def print_stats():
+        '''Prints accumulated statistics.'''
+        print("File size: {}".format(size[0]))
+        for k in sorted(codes.keys()):
+            if codes[k]:
+                print("{}: {}".format(k, codes[k]))
+    i = 1
     try:
-        for lines in sys.stdin:
-            a = lines.split(" ")
-            if "\n" in a[-1]:
-                value = a[-1][:-1]
-            else:
-                value = a[-1]
-            if len(a) > 2 and a[-2] in codes and value.isnumeric() is True:
-                dictio[a[-2]] += 1
-                file_size += int(value)
-                i += 1
+        for line in sys.stdin:
+            check_match(line)
             if i % 10 == 0:
-                print("File size: {}".format(file_size))
-                for code in codes:
-                    if dictio[code] > 0:
-                        print("{}: {}".format(code, dictio[code]))
-        exit()
-    except Exception:
-        pass
-    finally:
-        print("File size: {}".format(file_size))
-        for code in codes:
-            if dictio[code] > 0:
-                print("{}: {}".format(code, dictio[code]))
+                print_stats()
+            i += 1
+    except KeyboardInterrupt:
+        print_stats()
+        raise
+    print_stats()
+Footer
